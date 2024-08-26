@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('parking_session_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->decimal('amount',10,2);
+            $table->string('slug');
             $table->enum('payment_method', ['cash', 'ewallet', 'credit']);
             $table->timestamps();
             $table->softDeletes();

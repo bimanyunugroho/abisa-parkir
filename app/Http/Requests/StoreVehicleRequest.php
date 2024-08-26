@@ -11,7 +11,7 @@ class StoreVehicleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'plate_number'  => ['required', 'string', 'max:100'],
+            'type'  => ['required', 'string']
         ];
     }
 }

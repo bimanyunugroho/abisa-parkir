@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vehicle_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('parking_area_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('slug');
             $table->dateTime('entry_time');
             $table->dateTime('exit_time');
             $table->unsignedInteger('duration')->nullable();

@@ -11,7 +11,7 @@ class UpdateTransactionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class UpdateTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'parking_session_id' => [$this->isUpdate() ? 'required' : 'sometimes', 'exists:parking_sessions,id'],
+            'amount'    => [$this->isUpdate() ? 'required' : 'sometimes', 'integer', 'min:0'],
+            'user_id'   => [$this->isUpdate() ? 'required' : 'sometimes', 'exists:users,id'],
+            'payment_method' => [$this->isUpdate() ? 'required' : 'sometimes', 'string']
         ];
+    }
+
+    private function isUpdate(): bool
+    {
+        return $this->isMethod('PUT') || $this->isMethod('PATCH');
     }
 }

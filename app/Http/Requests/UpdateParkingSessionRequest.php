@@ -11,7 +11,7 @@ class UpdateParkingSessionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,19 @@ class UpdateParkingSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'vehicle_id' => [$this->isUpdate() ? 'required' : 'sometimes', 'exists:vehicles,id'],
+            'parking_area_id' => [$this->isUpdate() ? 'required' : 'sometimes', 'exists:parking_areas,id'],
+            'user_id' => [$this->isUpdate() ? 'required' : 'sometimes', 'exists:users,id'],
+            'entry_time' => [$this->isUpdate() ? 'required' : 'sometimes'],
+            'exit_time' => [$this->isUpdate() ? 'required' : 'sometimes'],
+            'duration' => [$this->isUpdate() ? 'required' : 'sometimes'],
+            'total_cost' => [$this->isUpdate() ? 'required' : 'sometimes'],
+            'status' => [$this->isUpdate() ? 'required' : 'sometimes']
         ];
+    }
+
+    private function isUpdate(): bool
+    {
+        return $this->isMethod('PUT') || $this->isMethod('PATCH');
     }
 }

@@ -11,7 +11,7 @@ class StoreTransactionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'parking_session_id' => ['required', 'exists:parking_sessions,id'],
+            'amount'    => ['required', 'integer', 'min:0'],
+            'user_id'   => ['required', 'exists:users,id'],
+            'payment_method' => ['required', 'string']
         ];
     }
 }

@@ -11,7 +11,7 @@ class UpdateVehicleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class UpdateVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'plate_number'  => [$this->isUpdate() ? 'required' : 'sometimes', 'string', 'max:100'],
+            'type'  => [$this->isUpdate() ? 'required' : 'sometimes', 'string']
         ];
+    }
+    
+    private function isUpdate(): bool
+    {
+        return $this->isMethod('PUT') || $this->isMethod('PATCH');
     }
 }

@@ -11,7 +11,7 @@ class StoreParkingSessionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class StoreParkingSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'vehicle_id' => ['required', 'exists:vehicles,id'],
+            'parking_area_id' => ['required', 'exists:parking_areas,id'],
+            'user_id' => ['required', 'exists:users,id'],
+            'entry_time' => ['required'],
+            'exit_time' => ['required'],
+            'duration' => ['required'],
+            'total_cost' => ['required'],
+            'status' => ['required']
         ];
     }
 }
