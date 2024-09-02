@@ -15,7 +15,7 @@ class ParkingAreaController extends Controller
      */
     public function index()
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Parkingarea/Index', [
             'title' => 'Master Parkir Area',
             'desc'  => 'Data master parkir area'
         ]);
@@ -26,7 +26,7 @@ class ParkingAreaController extends Controller
      */
     public function create()
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Parkingarea/Add', [
             'title' => 'Master Parkir Area',
             'desc'  => 'Tambah master parkir area'
         ]);
@@ -47,9 +47,10 @@ class ParkingAreaController extends Controller
      */
     public function edit(ParkingArea $parkingArea)
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Parkingarea/Edit', [
             'title' => 'Master Parkir Area',
-            'desc'  => 'Ubah master parkir area'
+            'desc'  => 'Ubah master parkir area',
+            'parking_area'  => $parkingArea
         ]);
     }
 

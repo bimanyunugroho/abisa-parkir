@@ -15,7 +15,7 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Vehicle/Index', [
             'title' => 'Master Kendaraan',
             'desc'  => 'Data kendaraan'
         ]);
@@ -26,7 +26,7 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Vehicle/Add', [
             'title' => 'Master Kendaraan',
             'desc'  => 'Tambah kendaraan'
         ]);
@@ -47,9 +47,10 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle)
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Vehicle/Edit', [
             'title' => 'Master Kendaraan',
-            'desc'  => 'Ubah kendaraan'
+            'desc'  => 'Ubah kendaraan',
+            'vehicle'   => $vehicle
         ]);
     }
 

@@ -15,7 +15,7 @@ class ParkingRateController extends Controller
      */
     public function index()
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Parkingrate/Index', [
             'title' => 'Master Parkir Rate',
             'desc'  => 'Data parkir rate'
         ]);
@@ -26,7 +26,7 @@ class ParkingRateController extends Controller
      */
     public function create()
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Parkingrate/Add', [
             'title' => 'Master Parkir Rate',
             'desc'  => 'Tambah data parkir rate'
         ]);
@@ -47,9 +47,10 @@ class ParkingRateController extends Controller
      */
     public function edit(ParkingRate $parkingRate)
     {
-        return Inertia::render('', [
+        return Inertia::render('Master/Parkingrate/Edit', [
             'title' => 'Master Parkir Rate',
-            'desc'  => 'Ubah data parkir rate'
+            'desc'  => 'Ubah data parkir rate',
+            'parking_rate'  => $parkingRate
         ]);
     }
 

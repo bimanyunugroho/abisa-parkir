@@ -15,7 +15,7 @@ class ParkingSessionController extends Controller
      */
     public function index()
     {
-        return Inertia::render('', [
+        return Inertia::render('Transaction/Parkingsession/Index', [
             'title' => 'Master Parkir Session',
             'desc'  => 'Data parkir session'
         ]);
@@ -26,7 +26,7 @@ class ParkingSessionController extends Controller
      */
     public function create()
     {
-        return Inertia::render('', [
+        return Inertia::render('Transaction/Parkingsession/Add', [
             'title' => 'Master Parkir Session',
             'desc'  => 'Tambah parkir session'
         ]);
@@ -45,11 +45,24 @@ class ParkingSessionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    public function show(ParkingSession $parkingSession)
+    {
+        return Inertia::render('Transaction/Parkingsession/Show', [
+            'title' => 'Master Parkir Session',
+            'desc'  => 'Detail parkir session',
+            'parking_session' => $parkingSession
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(ParkingSession $parkingSession)
     {
-        return Inertia::render('', [
+        return Inertia::render('Transaction/Parkingsession/Edit', [
             'title' => 'Master Parkir Session',
-            'desc'  => 'Ubah parkir session'
+            'desc'  => 'Ubah parkir session',
+            'parking_session'   => $parkingSession
         ]);
     }
 

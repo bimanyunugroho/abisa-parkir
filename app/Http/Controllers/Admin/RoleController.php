@@ -15,7 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return Inertia::render('', [
+        return Inertia::render('Access/Role/Index', [
             'title' => 'Master Role',
             'desc'  => 'Data master role',
         ]);
@@ -26,7 +26,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return Inertia::render('', [
+        return Inertia::render('Access/Role/Add', [
             'title' => 'Master Role',
             'desc'  => 'Tambah master role'
         ]);
@@ -47,9 +47,10 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        return Inertia::render('', [
+        return Inertia::render('Access/Role/Edit', [
             'title' => 'Master Role',
-            'desc'  => 'Ubah master role'
+            'desc'  => 'Ubah master role',
+            'role'  => $role
         ]);
     }
 

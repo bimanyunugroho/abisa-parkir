@@ -15,7 +15,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        return Inertia::render('', [
+        return Inertia::render('Transaction/Parking/Index', [
             'title' => 'Transaksi',
             'desc'  => 'Transaksi parkir'
         ]);
@@ -26,7 +26,7 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        return Inertia::render('', [
+        return Inertia::render('Transaction/Parking/Add', [
             'title' => 'Transaksi',
             'desc'  => 'Tambah transaksi parkir'
         ]);
@@ -47,7 +47,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        return Inertia::render('', [
+        return Inertia::render('Transaction/Parking/Show', [
             'title' => 'Transaksi',
             'desc'  => 'Detail transaksi',
             'transaction' => $transaction
@@ -59,9 +59,10 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        return Inertia::render('', [
+        return Inertia::render('Transaction/Parking/Edit', [
             'title' => 'Transaksi',
-            'desc'  => 'Ubah transaksi'
+            'desc'  => 'Ubah transaksi',
+            'transaction'   => $transaction
         ]);
     }
 
