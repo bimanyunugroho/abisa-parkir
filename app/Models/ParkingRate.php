@@ -13,15 +13,16 @@ class ParkingRate extends Model
     use HasFactory, HasSlug, SoftDeletes;
 
     protected $fillable = [
-        'type',
-        'rate_per_hour',
+        'vehicle_id',
+        'time_interval',
+        'cost',
         'slug'
     ];
 
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('type')
+            ->generateSlugsFrom(['vehicle_id', 'time_interval', 'cost'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
@@ -29,5 +30,15 @@ class ParkingRate extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

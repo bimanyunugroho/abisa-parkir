@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PaginationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
 use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
+use App\Http\Resources\VehicleResource;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class VehicleController extends Controller
@@ -13,11 +16,31 @@ class VehicleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $vehicles = Vehicle::query()
+            ->when($request->input('search'), function($query, $search) {
+                $query->where('name', 'ilike', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $formattedVehicle = $vehicles->map(function($vehicle) {
+            return new VehicleResource($vehicle);
+        });
+
         return Inertia::render('Master/Vehicle/Index', [
             'title' => 'Master Kendaraan',
-            'desc'  => 'Data kendaraan'
+            'desc'  => 'Data Kendaraan',
+            'vehicles'  => [
+                'data'  => $formattedVehicle,
+                'links' => PaginationHelper::formatPaginationLinks($vehicles),
+                'current_page'  => $vehicles->currentPage(),
+                'per_page' => $vehicles->perPage(),
+                'total' => $vehicles->total()
+            ],
+            'filters'   => $request->only(['search']) ?: ['search' => '']
         ]);
     }
 
@@ -28,7 +51,7 @@ class VehicleController extends Controller
     {
         return Inertia::render('Master/Vehicle/Add', [
             'title' => 'Master Kendaraan',
-            'desc'  => 'Tambah kendaraan'
+            'desc'  => 'Tambah Kendaraan'
         ]);
     }
 
@@ -39,7 +62,7 @@ class VehicleController extends Controller
     {
         $vehicle = Vehicle::create($request->validated());
 
-        return redirect()->route('vehicles.index')->with('success', 'Data kendaraan berhasil dibuat!');
+        return redirect()->route('vehicles.index')->with('success', 'Data Kendaraan berhasil dibuat!');
     }
 
     /**
@@ -49,7 +72,7 @@ class VehicleController extends Controller
     {
         return Inertia::render('Master/Vehicle/Edit', [
             'title' => 'Master Kendaraan',
-            'desc'  => 'Ubah kendaraan',
+            'desc'  => 'Ubah Kendaraan',
             'vehicle'   => $vehicle
         ]);
     }
@@ -61,7 +84,7 @@ class VehicleController extends Controller
     {
         $vehicle->update($request->validated());
 
-        return redirect()->route('vehicles.index')->with('success', 'Data kendaraan berhasil diubah!');
+        return redirect()->route('vehicles.index')->with('success', 'Data Kendaraan berhasil diubah!');
     }
 
     /**
@@ -71,6 +94,6 @@ class VehicleController extends Controller
     {
         $vehicle->delete();
 
-        return redirect()->route('vehicles.index')->with('success', 'Data kendaraan berhasil dihapus!');
+        return redirect()->route('vehicles.index')->with('success', 'Data Kendaraan berhasil dihapus!');
     }
 }

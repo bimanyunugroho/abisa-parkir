@@ -22,8 +22,7 @@ class StoreVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'plate_number'  => ['required', 'string', 'max:100'],
-            'type'  => ['required', 'string']
+            'name'  => ['required', 'string', 'max:100', 'unique:vehicles']
         ];
     }
 }

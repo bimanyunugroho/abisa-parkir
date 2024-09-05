@@ -28,11 +28,27 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div class="hidden space-x-3 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
+                                <NavLink :href="route('vehicles.index')" :active="route().current('vehicles.index')">
+                                    Kendaraan
+                                </NavLink>
+                                <NavLink :href="route('parking_areas.index')" :active="route().current('parking_areas.index')">
+                                    Area Parkir
+                                </NavLink>
+                                <NavLink :href="route('roles.index')" :active="route().current('roles.index')">
+                                    Role
+                                </NavLink>
+                                <NavLink :href="route('parking_rates.index')" :active="route().current('parking_rates.index')">
+                                    Setting Parkir
+                                </NavLink>
+                                <NavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
+                                    Transaksi
+                                </NavLink>
                             </div>
+
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">

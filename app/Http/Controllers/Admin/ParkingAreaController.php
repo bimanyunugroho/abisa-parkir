@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PaginationHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ParkingAreaResource;
 use App\Models\ParkingArea;
 use App\Http\Requests\StoreParkingAreaRequest;
 use App\Http\Requests\UpdateParkingAreaRequest;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ParkingAreaController extends Controller
@@ -13,11 +16,31 @@ class ParkingAreaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $parkingAreas = ParkingArea::query()
+            ->when($request->input('search'), function($query, $search) {
+                $query->where('name', 'ilike', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $formaatedParkingArea = $parkingAreas->map(function($parkingArea) {
+            return new ParkingAreaResource($parkingArea);
+        });
+
         return Inertia::render('Master/Parkingarea/Index', [
             'title' => 'Master Parkir Area',
-            'desc'  => 'Data master parkir area'
+            'desc'  => 'Data Master Parkir Area',
+            'parking_areas' => [
+                'data'  => $formaatedParkingArea,
+                'links' => PaginationHelper::formatPaginationLinks($parkingAreas),
+                'current_page'  => $parkingAreas->currentPage(),
+                'per_page'  => $parkingAreas->perPage(),
+                'total' => $parkingAreas->total()
+            ],
+            'filters'    => $request->only(['search']) ?: ['search' => '']
         ]);
     }
 
@@ -28,7 +51,7 @@ class ParkingAreaController extends Controller
     {
         return Inertia::render('Master/Parkingarea/Add', [
             'title' => 'Master Parkir Area',
-            'desc'  => 'Tambah master parkir area'
+            'desc'  => 'Tambah Master Parkir Area'
         ]);
     }
 
@@ -49,7 +72,7 @@ class ParkingAreaController extends Controller
     {
         return Inertia::render('Master/Parkingarea/Edit', [
             'title' => 'Master Parkir Area',
-            'desc'  => 'Ubah master parkir area',
+            'desc'  => 'Ubah Master Parkir Area',
             'parking_area'  => $parkingArea
         ]);
     }

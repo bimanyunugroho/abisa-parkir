@@ -13,17 +13,23 @@ class Transaction extends Model
     use HasFactory, HasSlug, SoftDeletes;
 
     protected $fillable = [
-        'parking_session_id',
-        'amount',
+        'parking_area_id',
+        'parking_rate_id',
         'user_id',
-        'payment_method',
-        'slug'
+        'no_ticket',
+        'license_plate',
+        'slug',
+        'entry_time',
+        'exit_time',
+        'duration',
+        'total_cost',
+        'status'
     ];
 
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom(['parking_session_id', 'amount', 'payment_method'])
+            ->generateSlugsFrom(['license_plate', 'entry_time'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
@@ -33,13 +39,18 @@ class Transaction extends Model
         return 'slug';
     }
 
-    public function parkingSession()
-    {
-        return $this->belongsTo(ParkingSession::class);
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function parkingArea()
+    {
+        return $this->belongsTo(ParkingArea::class);
+    }
+
+    public function parkingRate()
+    {
+        return $this->belongsTo(ParkingRate::class);
     }
 }

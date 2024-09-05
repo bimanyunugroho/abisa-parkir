@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PaginationHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class RoleController extends Controller
@@ -13,11 +16,31 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $roles = Role::query()
+            ->when($request->input('search'), function ($query, $search) {
+                $query->where('name', 'ilike', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $formattedRoles = $roles->map(function ($role) {
+            return new RoleResource($role);
+        });
+
         return Inertia::render('Access/Role/Index', [
             'title' => 'Master Role',
-            'desc'  => 'Data master role',
+            'desc'  => 'Data Master Role',
+            'roles' => [
+                'data'  => $formattedRoles,
+                'links' => PaginationHelper::formatPaginationLinks($roles),
+                'current_page'  => $roles->currentPage(),
+                'per_page'  => $roles->perPage(),
+                'total' => $roles->total()
+            ],
+            'filters'    => $request->only(['search']) ?: ['search' => '']
         ]);
     }
 
@@ -28,7 +51,7 @@ class RoleController extends Controller
     {
         return Inertia::render('Access/Role/Add', [
             'title' => 'Master Role',
-            'desc'  => 'Tambah master role'
+            'desc'  => 'Tambah Master Role'
         ]);
     }
 
@@ -49,7 +72,7 @@ class RoleController extends Controller
     {
         return Inertia::render('Access/Role/Edit', [
             'title' => 'Master Role',
-            'desc'  => 'Ubah master role',
+            'desc'  => 'Ubah Master Role',
             'role'  => $role
         ]);
     }

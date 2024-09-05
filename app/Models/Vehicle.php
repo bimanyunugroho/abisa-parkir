@@ -13,15 +13,14 @@ class Vehicle extends Model
     use HasFactory, HasSlug, SoftDeletes;
 
     protected $fillable = [
-        'plate_number',
-        'slug',
-        'type'
+        'name',
+        'slug'
     ];
 
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('plate_number')
+            ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
@@ -31,8 +30,8 @@ class Vehicle extends Model
         return 'slug';
     }
 
-    public function parkingSessions()
+    public function parkingRates()
     {
-        return $this->hasMany(ParkingSession::class);
+        return $this->hasMany(ParkingRate::class);
     }
 }

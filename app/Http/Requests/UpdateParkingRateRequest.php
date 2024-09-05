@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ParkingRate;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateParkingRateRequest extends FormRequest
 {
@@ -22,8 +24,9 @@ class UpdateParkingRateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => [$this->isUpdate() ? 'required' : 'sometimes', 'string'],
-            'rate_per_hor' => [$this->isUpdate() ? 'required' : 'sometimes']
+            'vehicle_id'    => [$this->isUpdate() ? 'required' : 'sometimes', 'exists:vehicles,id', Rule::unique(ParkingRate::class)->ignore($this->route('parking_rate')->id)],
+            'time_interval' => [$this->isUpdate() ? 'required' : 'sometimes', 'numeric'],
+            'cost'  => [$this->isUpdate() ? 'required' : 'sometimes', 'numeric']
         ];
     }
 

@@ -23,8 +23,7 @@ class StoreParkingAreaRequest extends FormRequest
     {
         return [
             'name'  => ['required', 'string', 'max:100', 'unique:parking_areas'],
-            'capacity'  => ['required', 'string', 'numeric'],
-            'current_occupancy' => ['required', 'string']
+            'capacity'  => ['required', 'numeric']
         ];
     }
 }

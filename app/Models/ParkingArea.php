@@ -15,8 +15,7 @@ class ParkingArea extends Model
     protected $fillable = [
         'name',
         'slug',
-        'capacity',
-        'current_occupancy'
+        'capacity'
     ];
 
     public function getSlugOptions(): SlugOptions
@@ -32,8 +31,8 @@ class ParkingArea extends Model
         return 'slug';
     }
 
-    public function parkingSessions()
+    public function transactions()
     {
-        return $this->hasMany(ParkingSession::class);
+        return $this->hasMany(Transaction::class);
     }
 }

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PaginationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ParkingRate;
 use App\Http\Requests\StoreParkingRateRequest;
 use App\Http\Requests\UpdateParkingRateRequest;
+use App\Http\Resources\ParkingRateResource;
+use App\Models\Vehicle;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ParkingRateController extends Controller
@@ -13,11 +17,34 @@ class ParkingRateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $parkingRates = ParkingRate::query()
+            ->with('vehicle')
+            ->when($request->input('search'), function ($query, $search) {
+                $query->whereHas('vehicle', function ($vehicleQuery) use ($search) {
+                    $vehicleQuery->where('name', 'ilike', "%{$search}%");
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $formattedParkingRate = $parkingRates->map(function ($parkingRate) {
+            return new ParkingRateResource($parkingRate);
+        });
+
         return Inertia::render('Master/Parkingrate/Index', [
-            'title' => 'Master Parkir Rate',
-            'desc'  => 'Data parkir rate'
+            'title' => 'Setting Parkir',
+            'desc'  => 'Setting Parkir',
+            'parking_rates' => [
+                'data'  => $formattedParkingRate,
+                'links' => PaginationHelper::formatPaginationLinks($parkingRates),
+                'current_page'  => $parkingRates->currentPage(),
+                'per_page'  => $parkingRates->perPage(),
+                'total' => $parkingRates->total()
+            ],
+            'filters'   => $request->only(['search']) ?: ['search' => '']
         ]);
     }
 
@@ -26,11 +53,14 @@ class ParkingRateController extends Controller
      */
     public function create()
     {
+        $vehicles = Vehicle::all();
         return Inertia::render('Master/Parkingrate/Add', [
-            'title' => 'Master Parkir Rate',
-            'desc'  => 'Tambah data parkir rate'
+            'title' => 'Setting Parkir',
+            'desc'  => 'Tambah Setting Parkir',
+            'vehicles'  => $vehicles
         ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -38,7 +68,6 @@ class ParkingRateController extends Controller
     public function store(StoreParkingRateRequest $request)
     {
         $parkir_rate = ParkingRate::create($request->validated());
-
         return redirect()->route('parking_rates.index')->with('success', 'Data parkir rate berhasil dibuat!');
     }
 
@@ -47,10 +76,12 @@ class ParkingRateController extends Controller
      */
     public function edit(ParkingRate $parkingRate)
     {
+        $vehicles = Vehicle::all();
         return Inertia::render('Master/Parkingrate/Edit', [
-            'title' => 'Master Parkir Rate',
-            'desc'  => 'Ubah data parkir rate',
-            'parking_rate'  => $parkingRate
+            'title' => 'Setting Parkir',
+            'desc'  => 'Ubah Setting Parkir',
+            'parking_rate'  => $parkingRate,
+            'vehicles'  => $vehicles
         ]);
     }
 

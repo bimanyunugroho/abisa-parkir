@@ -22,8 +22,9 @@ class StoreParkingRateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', 'string'],
-            'rate_per_hor' => ['required']
+            'vehicle_id'    => ['required', 'exists:vehicles,id', 'unique:parking_rates'],
+            'time_interval' => ['required', 'integer'],
+            'cost'  => ['required', 'integer']
         ];
     }
 }
