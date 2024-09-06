@@ -55,4 +55,40 @@ class Transaction extends Model
     {
         return $this->belongsTo(ParkingRate::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function ($transaction) {
+            $transaction->updateMonitoringParking(1);
+        });
+
+        static::updated(function ($transaction) {
+            if ($transaction->isDirty('exit_time') && $transaction->exit_time !== null) {
+                $transaction->updateMonitoringParking(-1);
+            }
+        });
+    }
+
+        protected function updateMonitoringParking($increment)
+    {
+        $parkingArea = $this->parkingArea;
+
+        if (!$parkingArea) {
+            return;
+        }
+
+        $status = $parkingArea->monitoringParking;
+        if (!$status) {
+            $status = $parkingArea->monitoringParking()->create([
+                'used' => 0,
+                'available' => $parkingArea->capacity
+            ]);
+        }
+
+        $status->used += $increment;
+        $status->available = $parkingArea->capacity - $status->used;
+        $status->save();
+    }
+
+
 }

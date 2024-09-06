@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MonitoringParkingController;
 use App\Http\Controllers\Admin\ParkingAreaController;
 use App\Http\Controllers\Admin\ParkingRateController;
 use App\Http\Controllers\Admin\ParkingSessionController;
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
         'vehicles' => VehicleController::class,
         'transactions'  => TransactionController::class
     ]);
+
+    Route::get('/monitoring_parkings', [MonitoringParkingController::class, 'index'])->name('monitoring_parkings.index');
 });
 
 

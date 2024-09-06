@@ -8,20 +8,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class ParkingArea extends Model
+class MonitoringParking extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'slug',
-        'capacity'
+        'parking_area_id',
+        'used',
+        'available',
+        'slug'
     ];
 
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('name')
+            ->generateSlugsFrom(['parking_area_id', 'used', 'available'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
@@ -31,13 +32,8 @@ class ParkingArea extends Model
         return 'slug';
     }
 
-    public function monitoringParking()
+    public function parkingArea()
     {
-        return $this->hasOne(MonitoringParking::class);
-    }
-
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class);
+        return $this->belongsTo(ParkingArea::class);
     }
 }

@@ -37,14 +37,28 @@ class TransactionController extends Controller
         });
 
         $user = Auth::id();
-        $parking_areas = ParkingArea::all();
         $parking_rates = ParkingRate::with('vehicle')->get()->map(function ($rate) {
             return [
                 'id' => $rate->id,
                 'name' => $rate->vehicle->name ?? 'Tidak Ada Kendaraan'
             ];
         });
+        $parking_areas = ParkingArea::all();
 
+        $parkingAreas = $parking_areas->map(function ($area) {
+            $monitoringParking = $area->monitoringParking;
+            $status = $monitoringParking ? ($monitoringParking->available > 0 ? 1 : 0) : 1;
+            return [
+                'id' => $area->id,
+                'name' => $area->name,
+                'status' => $status
+            ];
+        });
+
+        $filteredParkingAreas = $parkingAreas->filter(function ($area) {
+            return $area['status'] > 0;
+        });
+        
         return Inertia::render('Transaction/Parking/Index', [
             'title' => 'Transaksi',
             'desc'  => 'Transaksi Parkir',
@@ -57,7 +71,7 @@ class TransactionController extends Controller
             ],
             'filters'   => $request->only(['search']) ?: ['search' => ''],
             'user'  => $user,
-            'parking_areas' => $parking_areas,
+            'parking_areas' => $filteredParkingAreas,
             'parking_rates' => $parking_rates
         ]);
     }
