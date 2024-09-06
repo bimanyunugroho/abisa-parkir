@@ -1,6 +1,5 @@
 <script setup>
-
-import { router, useForm, Head } from '@inertiajs/vue3';
+import { router, useForm, Head, usePage } from '@inertiajs/vue3';
 import { debounce } from 'lodash-es';
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useToast } from 'vue-toastification';
@@ -13,6 +12,8 @@ import ActionLink from '@/Components/ActionLink.vue';
 import CheckButton from '@/Components/CheckButton.vue';
 import SubmitButton from '@/Components/SubmitButton.vue';
 import SelectedInput from '@/Components/SelectedInput.vue';
+import ParkingDetailModal from '@/Components/ParkingDetailModal.vue';
+import moment from 'moment-timezone';
 
 const props = defineProps({
     title: String,
@@ -42,13 +43,15 @@ watch(search, (value) => {
     debouncedSearch();
 });
 
+const timezoneAsia = ref(moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss'));
+
 // Proses Parkir Masuk
 const formParkirMasuk = useForm({
     license_plate: '',
     parking_area_id: '',
     parking_rate_id: '',
     user_id: props.user,
-    entry_time: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    entry_time: timezoneAsia.value,
     status: 'ACTIVE'
 });
 
@@ -67,14 +70,12 @@ function handleSubmit() {
         },
         onError: (errors) => {
             console.error('Server errors:', errors);
-            formParkirMasuk.errors = errors;
+            formParkirMasuk.setErrors(errors);
             toast.error('Oopss... Terjadi kesalahan. Silakan periksa form.');
             isProcessing.value = false;
         }
     });
 }
-// End
-
 
 // Time runner
 const currentDateTime = ref('');
@@ -97,7 +98,6 @@ onMounted(() => {
 onUnmounted(() => {
     clearInterval(timer);
 });
-// End
 
 // Parkir Keluar Inputs
 const parkirKeluar = ref({
@@ -116,7 +116,55 @@ watch(() => parkirKeluar.value.license_plate, (newValue) => {
         parkirKeluar.value.no_ticket = '';
     }
 });
-// End
+
+const showModal = ref(false);
+const selectedTransaction = ref(null);
+
+async function checkTransaction() {
+    const noTicket = parkirKeluar.value.no_ticket;
+    const licensePlate = parkirKeluar.value.license_plate;
+
+    // Validasi agar setidaknya satu parameter ada yang diisi
+    if (noTicket || licensePlate) {
+        const params = new URLSearchParams();
+
+        if (noTicket) {
+            params.append('no_ticket', noTicket);
+        }
+
+        if (licensePlate) {
+            params.append('license_plate', licensePlate);
+        }
+
+        try {
+            const response = await fetch(`${route('transactions.check')}?${params.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                if (data.length > 0) {
+                    selectedTransaction.value = data[0];
+                    showModal.value = true;
+                } else {
+                    toast.error('No transaction found.');
+                }
+                
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error('Error checking transaction. Please try again.');
+        }
+    } else {
+        toast.error('Please enter either No. Ticket or No. Plat.');
+    }
+}
+
 
 </script>
 
@@ -137,7 +185,7 @@ watch(() => parkirKeluar.value.license_plate, (newValue) => {
         <div class="pt-12 pb-0">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="dark:text-gray-200 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <div class="text-gray-900 dark:text-gray-100">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Form Parkir Masuk -->
                             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
@@ -190,7 +238,7 @@ watch(() => parkirKeluar.value.license_plate, (newValue) => {
                                 <div class="mb-4">
                                     <CheckButton :processing="isProcessing"
                                         :disabled="!parkirKeluar.no_ticket && !parkirKeluar.license_plate"
-                                        label="Check Parkir" />
+                                        @click="checkTransaction" label="Check Parkir" />
                                 </div>
                             </div>
                         </div>
@@ -299,5 +347,10 @@ watch(() => parkirKeluar.value.license_plate, (newValue) => {
             </div>
         </div>
 
+        <ParkingDetailModal 
+            :isVisible="showModal" 
+            :transaction="selectedTransaction" 
+            @close="showModal = false" 
+        />
     </AuthenticatedLayout>
 </template>

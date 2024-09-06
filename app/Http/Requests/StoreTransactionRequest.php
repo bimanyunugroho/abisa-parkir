@@ -33,6 +33,8 @@ class StoreTransactionRequest extends FormRequest
             'exit_time' => ['nullable', 'date_format:Y-m-d H:i:s', 'after:entry_time'],
             'duration' => ['nullable', 'integer', 'min:0'],
             'total_cost' => ['nullable', 'numeric', 'min:0', 'decimal:0,2'],
+            'payment' => ['nullable', 'numeric', 'min:0', 'decimal:0,2'],
+            'change_pay' => ['nullable', 'numeric', 'min:0', 'decimal:0,2'],
             'status' => ['required', Rule::in(StatusEnum::values())],
         ];
     }

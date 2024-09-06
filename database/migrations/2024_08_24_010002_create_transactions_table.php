@@ -24,6 +24,8 @@ return new class extends Migration
             $table->dateTime('exit_time')->nullable();
             $table->integer('duration')->nullable();
             $table->decimal('total_cost',10,2)->nullable();
+            $table->decimal('payment',10,2)->nullable();
+            $table->decimal('change_pay',10,2)->nullable();
             $table->enum('status', StatusEnum::values())->default(StatusEnum::ACTIVE->value);
             $table->timestamps();
             $table->softDeletes();

@@ -106,14 +106,22 @@ onUnmounted(() => {
                                             <span>Cost:</span>
                                             <span>{{ formatRupiah(transaction.total_cost ?? '0') }}</span>
                                         </div>
+                                        <div class="flex justify-between">
+                                            <span>Payment:</span>
+                                            <span>{{ formatRupiah(transaction.payment ?? '0') }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Change:</span>
+                                            <span>{{ formatRupiah(transaction.change_pay ?? '0') }}</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="flex justify-between items-center mt-4">
                                     <span>{{ transaction.user.name }}</span>
                                     <span :class="{
                                         'inline-block px-3 py-1 text-sm font-semibold rounded-full': true,
-                                        'text-green-800 bg-green-100': transaction.status === 'ACTIVE',
-                                        'text-blue-800 bg-blue-100': transaction.status === 'COMPLETE'
+                                        'text-blue-800 bg-blue-100': transaction.status === 'ACTIVE',
+                                        'text-green-800 bg-green-100': transaction.status === 'COMPLETE'
                                     }">
                                         {{ transaction.status }}
                                     </span>

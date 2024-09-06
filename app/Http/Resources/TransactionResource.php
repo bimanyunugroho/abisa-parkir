@@ -40,6 +40,8 @@ class TransactionResource extends JsonResource
             'exit_time' => $this->exit_time,
             'duration' => $this->duration,
             'total_cost' => $this->total_cost,
+            'payment' => $this->payment,
+            'change_pay' => $this->change_pay,
             'status'    => $this->status,
             'created_at'    => $this->created_at->format('Y-m-d H:i:s')
         ];

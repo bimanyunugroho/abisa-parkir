@@ -23,6 +23,8 @@ class Transaction extends Model
         'exit_time',
         'duration',
         'total_cost',
+        'payment',
+        'change_pay',
         'status'
     ];
 

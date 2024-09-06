@@ -89,13 +89,9 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Transaction $transaction)
+    public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
-        $transaction->delete();
-
-        return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil dihapus!');
+        $transaction->update($request->validated());
+        return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil dilakukan!');
     }
 }
