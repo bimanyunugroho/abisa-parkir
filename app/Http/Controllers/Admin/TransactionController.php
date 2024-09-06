@@ -80,10 +80,12 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
+        $transaction->load('user', 'parkingArea', 'parkingRate', 'parkingRate.vehicle');
+
         return Inertia::render('Transaction/Parking/Show', [
             'title' => 'Transaksi',
             'desc'  => 'Detail transaksi',
-            'transaction' => $transaction
+            'transaction' => new TransactionResource($transaction)
         ]);
     }
 

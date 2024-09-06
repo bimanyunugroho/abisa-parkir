@@ -116,7 +116,7 @@ watch(() => parkirKeluar.value.license_plate, (newValue) => {
         parkirKeluar.value.no_ticket = '';
     }
 });
-
+// End
 
 </script>
 
@@ -285,7 +285,7 @@ watch(() => parkirKeluar.value.license_plate, (newValue) => {
 
                                         <td class="px-6 py-4 whitespace-nowrap space-x-2">
                                             <ActionLink :href="route('transactions.show', transaction.slug)"
-                                                color="primary" label="show" />
+                                                color="primary" label="Check" />
                                         </td>
                                     </tr>
                                 </tbody>
