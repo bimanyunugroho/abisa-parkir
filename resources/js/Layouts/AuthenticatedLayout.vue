@@ -53,6 +53,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
                                     Transaksi
                                 </NavLink>
+                                <NavLink :href="route('reports.index')" :active="route().current('reports.index')">
+                                    Laporan Parkir
+                                </NavLink>
                             </div>
 
                         </div>

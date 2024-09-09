@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ParkingAreaController;
 use App\Http\Controllers\Admin\ParkingRateController;
 use App\Http\Controllers\Admin\ParkingSessionController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\VehicleController;
@@ -39,6 +40,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/monitoring_parkings', [MonitoringParkingController::class, 'index'])->name('monitoring_parkings.index');
     Route::get('/monitoring_vehicles', [MonitoringParkingController::class, 'monitoring_vehicle'])->name('monitoring_vehicle.index');
+
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post('/reports/process/excell', [ReportController::class, 'process_excell'])->name('reports.process.excell');
+    Route::post('/reports/process/pdf', [ReportController::class, 'process_pdf'])->name('reports.process.pdf');
+
 });
 
 
