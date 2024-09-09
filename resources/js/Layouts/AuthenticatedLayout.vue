@@ -47,6 +47,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('monitoring_parkings.index')" :active="route().current('monitoring_parkings.index')">
                                     Monitoring Area
                                 </NavLink>
+                                <NavLink :href="route('monitoring_vehicle.index')" :active="route().current('monitoring_vehicle.index')">
+                                    Monitoring Kendaraan
+                                </NavLink>
                                 <NavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
                                     Transaksi
                                 </NavLink>

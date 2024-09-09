@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\PaginationHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MonitoringParkingResource;
+use App\Http\Resources\TransactionResource;
 use App\Models\MonitoringParking;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -39,6 +41,38 @@ class MonitoringParkingController extends Controller
                 'total' => $monitoringParkings->total(),
             ],
             'filters'   => $request->only(['search']) ?: ['search' => '']
+        ]);
+    }
+
+    public function monitoring_vehicle(Request $request)
+    {
+        $transactions = Transaction::query()
+            ->when($request->input('search'), function ($query, $search) {
+                return $query->where('license_plate', 'like', "%{$search}%")
+                    ->orWhere('no_ticket', 'like', "%{$search}%");
+            })
+            ->with('user', 'parkingArea', 'parkingRate', 'parkingRate.vehicle')
+            ->where('entry_time', '<=', now()->subDays(2))
+            ->whereNull('exit_time')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $formattedTransaction = $transactions->map(function ($transaction) {
+            return new TransactionResource($transaction);
+        });
+
+        return Inertia::render('Monitoring/Vehicle/Index', [
+            'title' => 'Monitoring Kendaraan',
+            'desc'  => 'Monitoring Kendaraan > 3 Hari',
+            'transactions' => [
+                'data' => $formattedTransaction,
+                'links' => PaginationHelper::formatPaginationLinks($transactions),
+                'current_page' => $transactions->currentPage(),
+                'per_page' => $transactions->perPage(),
+                'total' => $transactions->total()
+            ],
+            'filters' => $request->only(['search']) ?: ['search' => '']
         ]);
     }
 }

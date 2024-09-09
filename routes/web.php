@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     ]);
 
     Route::get('/monitoring_parkings', [MonitoringParkingController::class, 'index'])->name('monitoring_parkings.index');
+    Route::get('/monitoring_vehicles', [MonitoringParkingController::class, 'monitoring_vehicle'])->name('monitoring_vehicle.index');
 });
 
 
