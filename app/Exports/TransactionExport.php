@@ -40,12 +40,12 @@ class TransactionExport implements FromQuery, WithHeadings, WithMapping, WithSty
 
         if ($this->type === 'rekap') {
             $query->select(DB::raw('EXTRACT(MONTH FROM exit_time) as bulan, EXTRACT(YEAR FROM exit_time) as tahun, COUNT(*) as total_parkir, SUM(total_cost) as total_cost, SUM(payment) as total_bayar, SUM(change_pay) as total_kembalian, SUM(payment - change_pay) as total_pendapatan'))
-                ->whereBetween('exit_time', [$this->startDate, $this->endDate])
+                ->whereBetween('exit_time', ["{$this->startDate} 00:00:00", "{$this->endDate} 23:59:59"])
                 ->where('status', '=', 'COMPLETE')
                 ->groupBy(DB::raw('EXTRACT(MONTH FROM exit_time), EXTRACT(YEAR FROM exit_time)'))
                 ->orderByRaw('EXTRACT(YEAR FROM exit_time), EXTRACT(MONTH FROM exit_time)');
         } else {
-            $query->whereBetween('exit_time', [$this->startDate, $this->endDate])
+            $query->whereBetween('exit_time', ["{$this->startDate} 00:00:00", "{$this->endDate} 23:59:59"])
                 ->where('status', '=', 'COMPLETE')
                 ->with(['parkingArea', 'parkingRate.vehicle', 'user']);
         }
