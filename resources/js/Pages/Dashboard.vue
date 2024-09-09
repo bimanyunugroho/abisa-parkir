@@ -19,7 +19,7 @@ onMounted(() => {
             labels: ['Terisi', 'Tersedia'],
             datasets: [{
                 data: [parkingData.occupied, parkingData.available],
-                backgroundColor: ['#4F46E5', '#10B981'],
+                backgroundColor: ['#DC143C', '#7B68EE'],
                 borderWidth: 0,
             }]
         },

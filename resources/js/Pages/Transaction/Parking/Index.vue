@@ -14,6 +14,7 @@ import SubmitButton from '@/Components/SubmitButton.vue';
 import SelectedInput from '@/Components/SelectedInput.vue';
 import ParkingDetailModal from '@/Components/ParkingDetailModal.vue';
 import moment from 'moment-timezone';
+import LicensePlat from '@/Components/LicensePlat.vue';
 
 const props = defineProps({
     title: String,
@@ -45,7 +46,6 @@ watch(search, (value) => {
 
 const timezoneAsia = ref(moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss'));
 
-// Proses Parkir Masuk
 const formParkirMasuk = useForm({
     license_plate: '',
     parking_area_id: '',
@@ -65,8 +65,10 @@ function handleSubmit() {
         preserveState: true,
         onSuccess: () => {
             toast.success('Transaksi berhasil disimpan!');
-            formParkirMasuk.reset();
             isProcessing.value = false;
+            setTimeout(() => {
+                location.reload();
+            }, 200);
         },
         onError: (errors) => {
             console.error('Server errors:', errors);
@@ -99,7 +101,6 @@ onUnmounted(() => {
     clearInterval(timer);
 });
 
-// Parkir Keluar Inputs
 const parkirKeluar = ref({
     no_ticket: '',
     license_plate: ''
@@ -124,7 +125,6 @@ async function checkTransaction() {
     const noTicket = parkirKeluar.value.no_ticket;
     const licensePlate = parkirKeluar.value.license_plate;
 
-    // Validasi agar setidaknya satu parameter ada yang diisi
     if (noTicket || licensePlate) {
         const params = new URLSearchParams();
 
@@ -195,8 +195,7 @@ async function checkTransaction() {
                                         <div class="md:col-span-2 mb-4">
                                             <label class="block text-sm font-medium text-slate-100 mb-1">No.
                                                 Plat</label>
-                                            <TextInputUppercase v-model="formParkirMasuk.license_plate" type="text"
-                                                placeholder="Masukkan No.Plat" class="w-full" />
+                                            <LicensePlat v-model="formParkirMasuk.license_plate" />
                                         </div>
                                         <div class="mb-4">
                                             <label
