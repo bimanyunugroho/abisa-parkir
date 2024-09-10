@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PermissionResource extends JsonResource
+class RbacResource extends JsonResource
 {
     /**
      * Initialize the resource instance.
@@ -16,7 +17,7 @@ class PermissionResource extends JsonResource
         parent::__construct($resource);
         static::withoutWrapping();
     }
-    
+
     /**
      * Transform the resource into an array.
      *
@@ -26,9 +27,10 @@ class PermissionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'created_at' => $this->created_at,
+            'permissions' => PermissionResource::collection($this->whenLoaded('permissions'))
         ];
     }
 }

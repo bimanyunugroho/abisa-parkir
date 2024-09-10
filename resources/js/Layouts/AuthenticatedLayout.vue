@@ -47,6 +47,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('rbacs.index')" :active="route().current('rbacs.index')">
                                     RBAC
                                 </NavLink>
+                                <NavLink :href="route('access_users.index')" :active="route().current('access_users.index')">
+                                    Akses User
+                                </NavLink>
                                 <NavLink :href="route('parking_rates.index')" :active="route().current('parking_rates.index')">
                                     Setting Parkir
                                 </NavLink>
