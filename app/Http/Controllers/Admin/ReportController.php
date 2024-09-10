@@ -13,6 +13,24 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
+    protected $permissions = [
+        'index' => 'view-reports',
+        'process_excell' => 'generate-excel-report',
+        'process_pdf' => 'generate-pdf-report',
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     public function index()
     {
         $vehicles = Vehicle::all();

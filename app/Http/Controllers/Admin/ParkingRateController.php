@@ -14,6 +14,28 @@ use Inertia\Inertia;
 
 class ParkingRateController extends Controller
 {
+    protected $permissions = [
+        'index' => 'view-parking-rates',
+        'create' => 'create-parking-rate',
+        'store' => 'create-parking-rate',
+        'show' => 'view-parking-rate',
+        'edit' => 'edit-parking-rate',
+        'update' => 'edit-parking-rate',
+        'destroy' => 'delete-parking-rate',
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */

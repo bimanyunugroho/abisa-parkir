@@ -5,7 +5,9 @@ use App\Http\Controllers\Admin\MonitoringParkingController;
 use App\Http\Controllers\Admin\ParkingAreaController;
 use App\Http\Controllers\Admin\ParkingRateController;
 use App\Http\Controllers\Admin\ParkingSessionController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\RbacController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TransactionController;
@@ -23,19 +25,21 @@ Route::get('/', function () {
     ]);
 })->name('/');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['permission:view-dashboard']);
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(['permission:edit-profile']);
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware(['permission:edit-profile']);
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware(['permission:edit-profile']);
     
     Route::resources([
         'roles' => RoleController::class,
         'parking_areas' => ParkingAreaController::class,
         'parking_rates' => ParkingRateController::class,
         'vehicles' => VehicleController::class,
-        'transactions'  => TransactionController::class
+        'transactions'  => TransactionController::class,
+        'permissions' => PermissionController::class,
+        'rbacs' => RbacController::class
     ]);
 
     Route::get('/monitoring_parkings', [MonitoringParkingController::class, 'index'])->name('monitoring_parkings.index');

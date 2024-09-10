@@ -41,6 +41,12 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('roles.index')" :active="route().current('roles.index')">
                                     Role
                                 </NavLink>
+                                <NavLink :href="route('permissions.index')" :active="route().current('permissions.index')">
+                                    Permissions
+                                </NavLink>
+                                <NavLink :href="route('rbacs.index')" :active="route().current('rbacs.index')">
+                                    RBAC
+                                </NavLink>
                                 <NavLink :href="route('parking_rates.index')" :active="route().current('parking_rates.index')">
                                     Setting Parkir
                                 </NavLink>

@@ -17,6 +17,28 @@ use Inertia\Inertia;
 
 class TransactionController extends Controller
 {
+    protected $permissions = [
+        'index' => 'view-transactions',
+        'create' => 'create-transaction',
+        'store' => 'create-transaction',
+        'show' => 'view-transaction',
+        'edit' => 'edit-transaction',
+        'update' => 'edit-transaction',
+        'destroy' => 'delete-transaction',
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */

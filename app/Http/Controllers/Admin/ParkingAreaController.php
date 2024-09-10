@@ -13,6 +13,28 @@ use Inertia\Inertia;
 
 class ParkingAreaController extends Controller
 {
+    protected $permissions = [
+        'index' => 'view-parking-areas',
+        'create' => 'create-parking-area',
+        'store' => 'create-parking-area',
+        'show' => 'view-parking-area',
+        'edit' => 'edit-parking-area',
+        'update' => 'edit-parking-area',
+        'destroy' => 'delete-parking-area',
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */

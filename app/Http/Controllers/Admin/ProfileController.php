@@ -14,6 +14,24 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    protected $permissions = [
+        'edit' => 'edit-profile',
+        'update' => 'edit-profile',
+        'destroy' => 'edit-profile'
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     /**
      * Display the user's profile form.
      */

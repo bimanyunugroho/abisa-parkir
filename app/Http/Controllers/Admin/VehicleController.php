@@ -13,6 +13,28 @@ use Inertia\Inertia;
 
 class VehicleController extends Controller
 {
+    protected $permissions = [
+        'index' => 'view-vehicles',
+        'create' => 'create-vehicle',
+        'store' => 'create-vehicle',
+        'show' => 'view-vehicle',
+        'edit' => 'edit-vehicle',
+        'update' => 'edit-vehicle',
+        'destroy' => 'delete-vehicle',
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */

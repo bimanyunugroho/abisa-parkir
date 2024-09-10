@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Traits\HasPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +13,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasSlug;
+    use HasFactory, Notifiable, HasSlug, HasPermissions;
 
     /**
      * The attributes that are mass assignable.
@@ -74,5 +76,47 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+    
+    public function hasPermission($permission)
+    {
+        if ($this->role_id === null) {
+            return in_array($permission, ['view-dashboard', 'edit-profile']);
+        }
+        return $this->role->permissions->contains('slug', $permission);
+    }
+
+    public function hasAnyPermission($permissions)
+    {
+        $permissions = (array)$permissions;
+
+        if ($this->role_id === null) {
+            return !empty(array_intersect(['view-dashboard', 'edit-profile'], $permissions));
+        }
+
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasAllPermissions($permissions)
+    {
+        $permissions = (array)$permissions;
+
+        if ($this->role_id === null) {
+            return empty(array_diff($permissions, ['view-dashboard', 'edit-profile']));
+        }
+
+        foreach ($permissions as $permission) {
+            if (!$this->hasPermission($permission)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

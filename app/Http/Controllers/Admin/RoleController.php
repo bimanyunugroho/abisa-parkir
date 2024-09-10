@@ -13,6 +13,28 @@ use Inertia\Inertia;
 
 class RoleController extends Controller
 {
+    protected $permissions = [
+        'index' => 'view-roles',
+        'create' => 'create-role',
+        'store' => 'create-role',
+        'show' => 'view-role',
+        'edit' => 'edit-role',
+        'update' => 'edit-role',
+        'destroy' => 'delete-role',
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
