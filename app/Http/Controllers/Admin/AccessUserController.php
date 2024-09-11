@@ -71,11 +71,12 @@ class AccessUserController extends Controller
      */
     public function edit(User $access_user)
     {
+        $access_user->load('role');
         $roles = Role::all();
         return Inertia::render('Access/User/Verify', [
             'title' => 'Akses User',
             'desc'  => 'Setting Verify Akses User',
-            'user'  => $access_user,
+            'user'  => new UserResource($access_user),
             'roles' => $roles
         ]);
     }

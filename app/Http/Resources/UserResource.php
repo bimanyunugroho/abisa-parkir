@@ -34,6 +34,7 @@ class UserResource extends JsonResource
             'slug' => $this->slug,
             'icon' => $this->icon,
             'email' => $this->email,
+            'role_id'   => $this->role_id,
             'icon_public_id' => $this->icon_public_id,
             'created_at'    => $this->created_at->format('Y-m-d H:i:s')
         ];
