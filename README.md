@@ -1,17 +1,5 @@
 ![alt text](image-1.png)
 
-<p align="center">
-  <a href="https://www.linkedin.com/in/bimanyunugroho/" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue" alt="LinkedIn">
-  </a>
-  &nbsp;&nbsp;&nbsp;
-  <img src="https://img.shields.io/badge/Laravel-11.22.0-brightgreen" alt="Laravel Version">
-  &nbsp;&nbsp;&nbsp;
-  <img src="https://img.shields.io/badge/Vue-5.4.3-brightgreen" alt="Vue Version">
-  &nbsp;&nbsp;&nbsp;
-  <img src="https://img.shields.io/badge/Status-Ready%20to%20Customer-green" alt="Status">
-</p>
-
 ## Sistem Informasi Parkir
 
 Sistem Informasi Parkir adalah aplikasi web berbasis Laravel yang dirancang untuk mengelola proses parkir kendaraan secara efisien. **Sistem ini menyediakan berbagai fitur untuk membantu pengelolaan parkir, mulai dari pemantauan slot, laporan parkir dan pendapatan, otorisasi menggunakan metode RBAC (Role-Based Access Control), Transaksi Parkir masuk dan keluar, dsb.**
