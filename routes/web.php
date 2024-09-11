@@ -42,6 +42,9 @@ Route::middleware(['auth'])->group(function () {
         'access_users'  => AccessUserController::class
     ]);
 
+    Route::put('access_users/non_active/{access_user}', [AccessUserController::class, 'non_active'])->name('access_users.non_active');
+    Route::put('access_users/active/{access_user}', [AccessUserController::class, 'active'])->name('access_users.active');
+
     Route::get('/monitoring_parkings', [MonitoringParkingController::class, 'index'])->name('monitoring_parkings.index');
     Route::get('/monitoring_vehicles', [MonitoringParkingController::class, 'monitoring_vehicle'])->name('monitoring_vehicle.index');
 

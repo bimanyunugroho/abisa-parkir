@@ -28,10 +28,12 @@ class UserResource extends JsonResource
     {
         return [
             'name'  => $this->name,
+            'username'  => $this->username,
             'role'  => new RoleResource($this->whenLoaded('role')),
             'status' => $this->status,
             'slug' => $this->slug,
             'icon' => $this->icon,
+            'email' => $this->email,
             'icon_public_id' => $this->icon_public_id,
             'created_at'    => $this->created_at->format('Y-m-d H:i:s')
         ];

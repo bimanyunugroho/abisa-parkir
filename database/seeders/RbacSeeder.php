@@ -46,6 +46,9 @@ class RbacSeeder extends Seeder
 
             // Reports
             'view reports', 'generate excel report', 'generate pdf report',
+
+            // RBACS, Akses User
+            'view rbacs', 'view access users'
         ];
 
         foreach ($permissions as $permission) {

@@ -1,13 +1,34 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const navItems = [
+    { label: 'Dashboard', parent: '', route: 'dashboard', permission: 'view-dashboard' },
+    { label: 'Kendaraan', parent: '', route: 'vehicles.index', permission: 'view-vehicles' },
+    { label: 'Area Parkir', parent: '', route: 'parking_areas.index', permission: 'view-parking-areas' },
+    { label: 'Role', parent: '', route: 'roles.index', permission: 'view-roles' },
+    { label: 'Permissions', parent: '', route: 'permissions.index', permission: 'view-permissions' },
+    { label: 'RBAC', parent: '', route: 'rbacs.index', permission: 'view-rbacs' },
+    { label: 'Akses User', parent: '', route: 'access_users.index', permission: 'view-access-users' },
+    { label: 'Setting Parkir', parent: '', route: 'parking_rates.index', permission: 'view-parking-rates' },
+    { label: 'Monitoring Area', parent: '', route: 'monitoring_parkings.index', permission: 'view-monitoring-parkings' },
+    { label: 'Monitoring Kendaraan', parent: '', route: 'monitoring_vehicle.index', permission: 'view-monitoring-vehicles' },
+    { label: 'Transaksi', parent: '', route: 'transactions.index', permission: 'view-transactions' },
+    { label: 'Laporan Parkir', parent: '', route: 'reports.index', permission: 'view-reports' }
+];
+
+const props = usePage();
+const filteredNavItems = computed(() => {
+    return navItems.filter(item => props.props.auth.user.permissions.includes(item.permission));
+});
+
 </script>
 
 <template>
@@ -29,41 +50,12 @@ const showingNavigationDropdown = ref(false);
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-3 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                                <NavLink :href="route('vehicles.index')" :active="route().current('vehicles.index')">
-                                    Kendaraan
-                                </NavLink>
-                                <NavLink :href="route('parking_areas.index')" :active="route().current('parking_areas.index')">
-                                    Area Parkir
-                                </NavLink>
-                                <NavLink :href="route('roles.index')" :active="route().current('roles.index')">
-                                    Role
-                                </NavLink>
-                                <NavLink :href="route('permissions.index')" :active="route().current('permissions.index')">
-                                    Permissions
-                                </NavLink>
-                                <NavLink :href="route('rbacs.index')" :active="route().current('rbacs.index')">
-                                    RBAC
-                                </NavLink>
-                                <NavLink :href="route('access_users.index')" :active="route().current('access_users.index')">
-                                    Akses User
-                                </NavLink>
-                                <NavLink :href="route('parking_rates.index')" :active="route().current('parking_rates.index')">
-                                    Setting Parkir
-                                </NavLink>
-                                <NavLink :href="route('monitoring_parkings.index')" :active="route().current('monitoring_parkings.index')">
-                                    Monitoring Area
-                                </NavLink>
-                                <NavLink :href="route('monitoring_vehicle.index')" :active="route().current('monitoring_vehicle.index')">
-                                    Monitoring Kendaraan
-                                </NavLink>
-                                <NavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
-                                    Transaksi
-                                </NavLink>
-                                <NavLink :href="route('reports.index')" :active="route().current('reports.index')">
-                                    Laporan Parkir
+                                <NavLink 
+                                    v-for="(navItem, index) in filteredNavItems" 
+                                    :key="index"
+                                    :href="route(navItem.route)"
+                                    :active="route().current(navItem.route)">
+                                    {{ navItem.label }}
                                 </NavLink>
                             </div>
 
