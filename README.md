@@ -56,6 +56,14 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek:
     ```bash
     cp .env.example .env
     ```
+    
+    ```bash
+    Buka VSCode nya -> code .
+    Lalu ubah .env di :
+    - Line 1 APP_NAME ganti dari Laravel menjadi SI-Parkir atau sesuka kamu sendiri
+    - Line 5 APP_TIMEZONE ganti dari UTC menjadi Asia/Jakarta
+    - Line 6 APP_URL ganti menjadi APP_URL=http://abisa-parkir.test
+    ```
 
 4. **Generate Kunci Aplikasi**
 
