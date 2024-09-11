@@ -50,13 +50,13 @@ const updateThirdPart = () => {
             <div
                 class="border-gray-300 dark:border-gray-700 w-full dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm p-7 flex items-center justify-center">
                 <input type="text" maxlength="2" v-model="firstPart" @input="updateFirstPart"
-                    class="dark:border-gray-900 dark:bg-gray-900 dark:text-gray-300 rounded-l-md border-r-0 p-7 shadow-sm w-28 text-3xl font-extrabold focus:outline-none focus:ring-0 border-none"
+                    class="dark:border-gray-900 dark:bg-gray-900 dark:text-gray-300 rounded-l-md border-r-0 p-7 justify-center text-center m-auto shadow-sm w-24 text-3xl font-extrabold focus:outline-none focus:ring-0 border-none"
                     placeholder="AD" autofocus />
                 <input type="text" maxlength="4" v-model="secondPart" @input="updateSecondPart"
-                    class="dark:border-gray-900 dark:bg-gray-900 dark:text-gray-300 border-r-0 p-7 shadow-sm w-40 text-3xl font-extrabold focus:outline-none focus:ring-0 border-none"
+                    class="dark:border-gray-900 dark:bg-gray-900 dark:text-gray-300 border-r-0 p-7 justify-center text-center m-auto shadow-sm w-40 text-3xl font-extrabold focus:outline-none focus:ring-0 border-none"
                     placeholder="1234" />
                 <input type="text" maxlength="3" v-model="thirdPart" @input="updateThirdPart"
-                    class="dark:border-gray-900 dark:bg-gray-900 dark:text-gray-300 rounded-r-md p-7 shadow-sm w-24 text-3xl font-extrabold focus:outline-none focus:ring-0 border-none"
+                    class="dark:border-gray-900 dark:bg-gray-900 dark:text-gray-300 rounded-r-md p-7 justify-center text-center m-auto shadow-sm w-32 text-3xl font-extrabold focus:outline-none focus:ring-0 border-none"
                     placeholder="ABV" />
             </div>
         </div>

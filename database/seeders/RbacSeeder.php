@@ -24,22 +24,22 @@ class RbacSeeder extends Seeder
             'edit profile',
 
             // Roles
-            'view roles', 'create role', 'edit role', 'delete role',
+            'view roles', 'view role', 'create role', 'edit role', 'delete role',
 
             // Parking Areas
-            'view parking areas', 'create parking area', 'edit parking area', 'delete parking area',
+            'view parking areas', 'view parking area', 'create parking area', 'edit parking area', 'delete parking area',
 
             // Parking Rates
-            'view parking rates', 'create parking rate', 'edit parking rate', 'delete parking rate',
+            'view parking rates', 'view parking rate', 'create parking rate', 'edit parking rate', 'delete parking rate',
 
             // Vehicles
-            'view vehicles', 'create vehicle', 'edit vehicle', 'delete vehicle',
+            'view vehicles', 'view vehicle', 'create vehicle', 'edit vehicle', 'delete vehicle',
 
             // Transactions
-            'view transactions', 'create transaction', 'edit transaction', 'delete transaction',
+            'view transactions', 'view transaction', 'create transaction', 'edit transaction', 'delete transaction',
 
             // Permissions
-            'view permissions', 'create permission', 'edit permission', 'delete permission',
+            'view permissions', 'view permission', 'create permission', 'edit permission', 'delete permission',
 
             // Monitoring
             'view monitoring parkings', 'view monitoring vehicles',
@@ -47,8 +47,11 @@ class RbacSeeder extends Seeder
             // Reports
             'view reports', 'generate excel report', 'generate pdf report',
 
-            // RBACS, Akses User
-            'view rbacs', 'view access users'
+            // RBACS
+            'view rbacs', 'view rbac', 'create rbac', 'edit rbac', 'delete rbac',
+            
+            // Akses User
+            'view access users', 'view access user', 'edit access user'
         ];
 
         foreach ($permissions as $permission) {
@@ -63,7 +66,7 @@ class RbacSeeder extends Seeder
             'view dashboard',
             'edit profile',
             'view monitoring parkings', 'view monitoring vehicles',
-            'view transactions',
+            'view transactions', 'view transaction',
             'view reports', 'generate excel report', 'generate pdf report',
         ];
         $managerRole->permissions()->attach(Permission::whereIn('name', $managerPermissions)->get());
@@ -75,7 +78,7 @@ class RbacSeeder extends Seeder
             'view parking areas', 'create parking area', 'edit parking area', 'delete parking area',
             'view parking rates', 'create parking rate', 'edit parking rate', 'delete parking rate',
             'view vehicles', 'create vehicle', 'edit vehicle', 'delete vehicle',
-            'view transactions',
+            'view transactions', 'view transaction',
             'view monitoring parkings', 'view monitoring vehicles',
             'view reports', 'generate excel report', 'generate pdf report',
         ];
@@ -86,7 +89,7 @@ class RbacSeeder extends Seeder
         $operatorPermission = [
             'view dashboard',
             'edit profile',
-            'view transactions', 'create transaction', 'edit transaction', 'delete transaction',
+            'view transactions', 'view transaction', 'create transaction', 'edit transaction', 'delete transaction',
             'view monitoring parkings', 'view monitoring vehicles',
             'view reports', 'generate excel report', 'generate pdf report',
         ];

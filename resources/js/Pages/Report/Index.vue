@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import axios from 'axios';
+import flatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
+import 'flatpickr/dist/themes/airbnb.css';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import TextInput from '@/Components/TextInput.vue';
 import SelectedInput from '@/Components/SelectedInput.vue';
 
 const props = defineProps({
@@ -75,9 +77,6 @@ const downloadReport = () => {
     <Head :title="title" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ desc }}</h2>
-        </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -90,15 +89,23 @@ const downloadReport = () => {
                                     <label for="startDate"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal
                                         Mulai</label>
-                                    <input type="date" id="startDate" v-model="form.startDate"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                                        <flat-pickr
+                                            v-model="form.startDate"
+                                            :config="config"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                            placeholder="Pilih Tanggal Mulai Parkir"
+                                            name="date"/>
                                 </div>
                                 <div class="space-y-2">
                                     <label for="endDate"
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal
                                         Akhir</label>
-                                    <input type="date" id="endDate" v-model="form.endDate"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                                        <flat-pickr
+                                            v-model="form.endDate"
+                                            :config="config"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                            placeholder="Pilih Tanggal Akhir Parkir"
+                                            name="date"/>
                                 </div>
                             </div>
 

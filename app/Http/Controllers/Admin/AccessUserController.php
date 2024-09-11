@@ -9,11 +9,30 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AccessUserController extends Controller
 {
+    protected $permissions = [
+        'index' => 'view-access-users',
+        'edit' => 'edit-access-user',
+        'update' => 'edit-access-user',
+        'non_active' => 'edit-access-user',
+        'active' => 'edit-access-user',
+    ];
+
+    public function __construct(Request $request)
+    {
+        $action = $request->route()?->getActionMethod();
+        
+        if ($action && isset($this->permissions[$action])) {
+            $requiredPermission = $this->permissions[$action];
+            if (!$request->user()->hasPermission($requiredPermission)) {
+                abort(403, 'Role Anda Tidak Punya Akses');
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
