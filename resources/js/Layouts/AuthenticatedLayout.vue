@@ -10,24 +10,35 @@ import { Link, usePage } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 
 const navItems = [
-    { label: 'Dashboard', parent: '', route: 'dashboard', permission: 'view-dashboard' },
-    { label: 'Kendaraan', parent: '', route: 'vehicles.index', permission: 'view-vehicles' },
-    { label: 'Area Parkir', parent: '', route: 'parking_areas.index', permission: 'view-parking-areas' },
-    { label: 'Role', parent: '', route: 'roles.index', permission: 'view-roles' },
-    { label: 'Permissions', parent: '', route: 'permissions.index', permission: 'view-permissions' },
-    { label: 'RBAC', parent: '', route: 'rbacs.index', permission: 'view-rbacs' },
-    { label: 'Akses User', parent: '', route: 'access_users.index', permission: 'view-access-users' },
-    { label: 'Setting Parkir', parent: '', route: 'parking_rates.index', permission: 'view-parking-rates' },
-    { label: 'Monitoring Area', parent: '', route: 'monitoring_parkings.index', permission: 'view-monitoring-parkings' },
-    { label: 'Monitoring Kendaraan', parent: '', route: 'monitoring_vehicle.index', permission: 'view-monitoring-vehicles' },
-    { label: 'Transaksi', parent: '', route: 'transactions.index', permission: 'view-transactions' },
-    { label: 'Laporan Parkir', parent: '', route: 'reports.index', permission: 'view-reports' }
+    { label: 'Dashboard', parent: 'Dashboard', route: 'dashboard', permission: 'view-dashboard' },
+    { label: 'Kendaraan', parent: 'Master', route: 'vehicles.index', permission: 'view-vehicles' },
+    { label: 'Area Parkir', parent: 'Master', route: 'parking_areas.index', permission: 'view-parking-areas' },
+    { label: 'Role', parent: 'Akses', route: 'roles.index', permission: 'view-roles' },
+    { label: 'Permissions', parent: 'Akses', route: 'permissions.index', permission: 'view-permissions' },
+    { label: 'RBAC', parent: 'Akses', route: 'rbacs.index', permission: 'view-rbacs' },
+    { label: 'Akses User', parent: 'Akses', route: 'access_users.index', permission: 'view-access-users' },
+    { label: 'Setting Parkir', parent: 'Setting', route: 'parking_rates.index', permission: 'view-parking-rates' },
+    { label: 'Monitoring Area', parent: 'Monitoring', route: 'monitoring_parkings.index', permission: 'view-monitoring-parkings' },
+    { label: 'Monitoring Kendaraan', parent: 'Monitoring', route: 'monitoring_vehicle.index', permission: 'view-monitoring-vehicles' },
+    { label: 'Transaksi', parent: 'Transaksi', route: 'transactions.index', permission: 'view-transactions' },
+    { label: 'Laporan Parkir', parent: 'Laporan', route: 'reports.index', permission: 'view-reports' }
 ];
 
 const props = usePage();
-const filteredNavItems = computed(() => {
-    return navItems.filter(item => props.props.auth.user.permissions.includes(item.permission));
+const groupedNavItems = computed(() => {
+    const filtered = navItems.filter(item => props.props.auth.user.permissions.includes(item.permission));
+    return filtered.reduce((acc, item) => {
+        if (!acc[item.parent]) {
+            acc[item.parent] = [];
+        }
+        acc[item.parent].push(item);
+        return acc;
+    }, {});
 });
+
+const isParentActive = (items) => {
+    return items.some(item => route().current(item.route));
+};
 
 </script>
 
@@ -50,13 +61,40 @@ const filteredNavItems = computed(() => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-3 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink 
-                                    v-for="(navItem, index) in filteredNavItems" 
-                                    :key="index"
-                                    :href="route(navItem.route)"
-                                    :active="route().current(navItem.route)">
-                                    {{ navItem.label }}
-                                </NavLink>
+                                <template v-for="(items, parent) in groupedNavItems" :key="parent">
+                                    <Dropdown v-if="items.length > 1" align="right" width="48">
+                                        <template #trigger>
+                                            <button
+                                                class="inline-flex items-center px-1 py-5 mt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out"
+                                                :class="[isParentActive(items) 
+                                                    ? 'border-indigo-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100' 
+                                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700']"
+                                            >
+                                                {{ parent }}
+                                                <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </template>
+                                        <template #content>
+                                            <DropdownLink 
+                                                v-for="item in items" 
+                                                :key="item.route" 
+                                                :href="route(item.route)"
+                                                :active="route().current(item.route)"
+                                            >
+                                                {{ item.label }}
+                                            </DropdownLink>
+                                        </template>
+                                    </Dropdown>
+                                    <NavLink 
+                                        v-else
+                                        :href="route(items[0].route)"
+                                        :active="route().current(items[0].route)"
+                                    >
+                                        {{ items[0].label }}
+                                    </NavLink>
+                                </template>
                             </div>
 
                         </div>
