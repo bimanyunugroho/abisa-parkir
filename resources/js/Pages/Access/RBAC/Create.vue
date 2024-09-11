@@ -1,7 +1,7 @@
 <script setup>
 import { Head, useForm, router, Link } from '@inertiajs/vue3';
 import { useToast } from 'vue-toastification';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -27,13 +27,34 @@ const form = useForm({
 
 const selectedPermissions = ref([]);
 
+const dashboardViewPermission = computed(() => {
+    return props.permissions.find(permission => 
+        permission.name.toLowerCase().includes('view') && 
+        permission.name.toLowerCase().includes('dashboard')
+    );
+});
+
+onMounted(() => {
+    if (dashboardViewPermission.value) {
+        selectedPermissions.value.push(dashboardViewPermission.value.id);
+    }
+});
+
 watch(() => form.permissions, (newValue) => {
     selectedPermissions.value = newValue.map(id => parseInt(id));
+    // Ensure dashboard view permission is always included
+    if (dashboardViewPermission.value && !selectedPermissions.value.includes(dashboardViewPermission.value.id)) {
+        selectedPermissions.value.push(dashboardViewPermission.value.id);
+    }
 }, { deep: true });
 
 const isProcessing = ref(false);
+
 function handleSubmit() {
     isProcessing.value = true;
+    if (dashboardViewPermission.value && !selectedPermissions.value.includes(dashboardViewPermission.value.id)) {
+        selectedPermissions.value.push(dashboardViewPermission.value.id);
+    }
     form.permissions = selectedPermissions.value;
     router.post(route('rbacs.store'), form, {
         preserveScroll: true,
@@ -41,7 +62,7 @@ function handleSubmit() {
         onSuccess: () => {
             toast.success('RBAC berhasil disimpan!');
             form.reset();
-            selectedPermissions.value = [];
+            selectedPermissions.value = dashboardViewPermission.value ? [dashboardViewPermission.value.id] : [];
             isProcessing.value = false;
         },
         onError: (errors) => {
@@ -52,6 +73,9 @@ function handleSubmit() {
 }
 
 function togglePermission(permissionId) {
+    if (dashboardViewPermission.value && permissionId === dashboardViewPermission.value.id) {
+        return;
+    }
     const index = selectedPermissions.value.indexOf(permissionId);
     if (index === -1) {
         selectedPermissions.value.push(permissionId);
@@ -132,9 +156,22 @@ const groupedPermissions = computed(() => {
                                                                 :value="permission.id"
                                                                 :checked="selectedPermissions.includes(permission.id)"
                                                                 @change="togglePermission(permission.id)"
-                                                                class="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded-md"
+                                                                :disabled="dashboardViewPermission && dashboardViewPermission.id === permission.id"
+                                                                :class="['form-checkbox h-5 w-5 transition duration-150 ease-in-out rounded-md',
+                                                                    dashboardViewPermission && dashboardViewPermission.id === permission.id
+                                                                        ? 'text-gray-400 cursor-not-allowed'
+                                                                        : 'text-blue-600'
+                                                                ]"
                                                             />
-                                                            <InputLabel :for="'permission-' + permission.id" :value="permission.name" class="ml-2 text-sm" />
+                                                            <InputLabel 
+                                                                :for="'permission-' + permission.id" 
+                                                                :value="permission.name" 
+                                                                :class="['ml-2 text-sm', 
+                                                                    dashboardViewPermission && dashboardViewPermission.id === permission.id
+                                                                        ? 'text-gray-400'
+                                                                        : ''
+                                                                ]"
+                                                            />
                                                         </div>
                                                     </div>
                                                 </td>
