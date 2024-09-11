@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ParkingArea;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateParkingAreaRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateParkingAreaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,13 @@ class UpdateParkingAreaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'  => [$this->isUpdate() ? 'required': 'sometimes', 'string', 'max:100', Rule::unique(ParkingArea::class)->ignore($this->route('parking_area')->id)],
+            'capacity'  => [$this->isUpdate() ? 'required': 'sometimes', 'numeric']
         ];
+    }
+
+    private function isUpdate(): bool
+    {
+        return $this->isMethod('PUT') || $this->isMethod('PATCH');
     }
 }

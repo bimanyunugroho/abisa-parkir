@@ -11,7 +11,7 @@ class StoreParkingRateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreParkingRateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'vehicle_id'    => ['required', 'exists:vehicles,id', 'unique:parking_rates'],
+            'time_interval' => ['required', 'integer'],
+            'cost'  => ['required', 'integer']
         ];
     }
 }

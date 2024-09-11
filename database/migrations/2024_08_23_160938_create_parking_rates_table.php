@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('parking_rates', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['motor', 'mobil', 'truk', 'sepeda']);
-            $table->decimal('rate_per_hour', 10, 2);
+            $table->foreignId('vehicle_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->integer('time_interval');
+            $table->decimal('cost', 10, 2);
             $table->string('slug');
+            $table->unique('vehicle_id');
             $table->timestamps();
             $table->softDeletes();
         });

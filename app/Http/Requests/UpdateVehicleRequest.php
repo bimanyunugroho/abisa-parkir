@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Vehicle;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateVehicleRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateVehicleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,12 @@ class UpdateVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'  => [$this->isUpdate() ? 'required' : 'sometimes', 'string', 'max:100', Rule::unique(Vehicle::class)->ignore($this->route('vehicle')->id)]
         ];
+    }
+    
+    private function isUpdate(): bool
+    {
+        return $this->isMethod('PUT') || $this->isMethod('PATCH');
     }
 }

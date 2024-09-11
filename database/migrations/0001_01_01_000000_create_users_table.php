@@ -17,10 +17,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('username')->nullable();
             $table->foreignId('role_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->enum('status', [1, 0])->default(1)->nullable();            
+            $table->enum('status', [1, 0])->default(1)->nullable();
+            $table->string('slug');            
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('icon')->nullable();
+            $table->string('icon_public_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

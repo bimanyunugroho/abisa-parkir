@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('plate_number')->unique();
+            $table->string('name')->unique();
             $table->string('slug');
-            $table->enum('type', ['motor', 'mobil', 'truk', 'sepeda']);
             $table->timestamps();
             $table->softDeletes();
         });
