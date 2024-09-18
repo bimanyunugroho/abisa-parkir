@@ -13,6 +13,7 @@ Sistem Informasi Parkir adalah aplikasi web berbasis Laravel yang dirancang untu
 - **Riwayat Parkir:** Melacak riwayat parkir kendaraan, termasuk waktu masuk dan keluar.
 - **Laporan:** Menyediakan laporan terkait penggunaan parkir dan pendapatan.
 - **Otorisasi:** Otorisasi menggunakan metode RBAC (Role-Based Access Control).
+- **Sistem QRCode:** Di Sistem ini sudah integrasi dengan QRCode dimana QRCode akan discan guna untuk menghandle parkir yang akan keluar
 
 ### Prasyarat
 
@@ -24,7 +25,7 @@ Pastikan kamu telah menginstal dan atau mengkonfigurasi dibawah ini:
 - PostgreSQL
 - Di php.ini aktifkan dulu **extension=zip**
 
-### Instalasi
+### Instalasi Versi Development Environment
 
 Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek:
 
@@ -99,7 +100,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek:
     php artisan migrate:refresh --seed
     ```
 
-6. **Running Application**
+7. **Running Application**
 
     Jalankan perintah berikut untuk membuat tabel-tabel yang diperlukan:
 
@@ -112,7 +113,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek:
     abisa-parkir.test (ini kalau kamu pakai Laragon)
     ```
 
-6. **User Admin Default**
+8. **User Admin Default**
 
     Jalankan perintah berikut untuk membuat tabel-tabel yang diperlukan:
 
@@ -120,6 +121,12 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek:
     EMAIL= abisa@gmail.com
     PASSWORD= abisa12345
     ```
+
+9. **Note**
+
+    - Untuk versi Developement ini kamu ngga bisa gunain fitur QrCode karena membutuhkan akses SSL atau protocol HTTPS
+    - Tapi tenang saja kamu bisa akses fitur itu dengan menggunakan **NGROK**
+    - Kalau masih tetap tidak bisa, kamu boleh ko' hubungi **ADMIN**
 
 ### Lisensi
 
