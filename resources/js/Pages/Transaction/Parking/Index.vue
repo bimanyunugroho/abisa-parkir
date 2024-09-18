@@ -3,6 +3,7 @@ import { router, useForm, Head, usePage } from '@inertiajs/vue3';
 import { debounce } from 'lodash-es';
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useToast } from 'vue-toastification';
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TextInput from '@/Components/TextInput.vue';
@@ -63,12 +64,14 @@ function handleSubmit() {
     router.post(route('transactions.store'), formParkirMasuk, {
         preserveScroll: true,
         preserveState: true,
-        onSuccess: () => {
-            toast.success('Transaksi berhasil disimpan!');
+        onSuccess: (page) => {
+            toast.success(page.props.message);
             isProcessing.value = false;
+            window.open(page.props.pdfUrl, '_blank');
+            formParkirMasuk.reset();
             setTimeout(() => {
                 location.reload();
-            }, 200);
+            }, 500);
         },
         onError: (errors) => {
             console.error('Server errors:', errors);
@@ -153,7 +156,7 @@ async function checkTransaction() {
                 } else {
                     toast.error('No transaction found.');
                 }
-                
+
             } else {
                 toast.error(data.message);
             }
@@ -164,6 +167,62 @@ async function checkTransaction() {
         toast.error('Please enter either No. Ticket or No. Plat.');
     }
 }
+
+// QR Code
+const qrCodeScanner = ref(null);
+const isScanning = ref(false);
+
+function initializeScanner() {
+    const qrReaderElement = document.getElementById("qr-reader");
+    if (qrReaderElement && !qrCodeScanner.value) {
+        qrCodeScanner.value = new Html5QrcodeScanner(
+            "qr-reader",
+            { fps: 10, qrbox: 250 },
+            /* verbose= */ false
+        );
+    }
+}
+
+function startQRCodeScanner() {
+    if (window.location.protocol !== 'https:') {
+        alert("QR scanner is only available over HTTPS.");
+        return;
+    }
+
+    isScanning.value = true;
+    if (qrCodeScanner.value) {
+        qrCodeScanner.value.render(onScanSuccess, onScanFailure);
+    } else {
+        console.error("QR Code scanner couldn't be initialized");
+        isScanning.value = false;
+    }
+}
+
+function stopQRCodeScanner() {
+    if (qrCodeScanner.value) {
+        qrCodeScanner.value.clear().catch(error => console.error("Error stopping scanner:", error));
+        isScanning.value = false;
+    }
+}
+
+function onScanSuccess(decodedText, decodedResult) {
+    parkirKeluar.value.no_ticket = decodedText;
+    stopQRCodeScanner();
+    checkTransaction();
+}
+
+function onScanFailure(error) {
+    console.warn(`QR code scanning failure: ${error}`);
+}
+
+onMounted(() => {
+    initializeScanner();
+});
+
+onUnmounted(() => {
+    stopQRCodeScanner();
+});
+// End
 
 
 </script>
@@ -238,7 +297,13 @@ async function checkTransaction() {
                                     <CheckButton :processing="isProcessing"
                                         :disabled="!parkirKeluar.no_ticket && !parkirKeluar.license_plate"
                                         @click="checkTransaction" label="Check Parkir" />
+                                    <button @click="startQRCodeScanner"
+                                        class="inline-flex mx-2 items-center px-4 py-2 bg-violet-800 dark:bg-violet-200 border border-transparent rounded-md font-extrabold text-xs dark:text-purple-900 hover:text-white uppercase tracking-widest hover:bg-violet-700 dark:hover:bg-purple focus:bg-violet-700 dark:focus:bg-purple active:bg-violet-900 dark:active:bg-violet-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-violet-800 transition ease-in-out duration-150"
+                                        :disabled="isScanning">
+                                        {{ isScanning ? 'Scanning...' : 'Scan QR Code' }}
+                                    </button>
                                 </div>
+                                <div v-show="isScanning" id="qr-reader" class="w-full max-w-sm mx-auto"></div>
                             </div>
                         </div>
                     </div>
@@ -346,10 +411,6 @@ async function checkTransaction() {
             </div>
         </div>
 
-        <ParkingDetailModal 
-            :isVisible="showModal" 
-            :transaction="selectedTransaction" 
-            @close="showModal = false" 
-        />
+        <ParkingDetailModal :isVisible="showModal" :transaction="selectedTransaction" @close="showModal = false" />
     </AuthenticatedLayout>
 </template>

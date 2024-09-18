@@ -11,6 +11,7 @@ const showingNavigationDropdown = ref(false);
 
 const navItems = [
     { label: 'Dashboard', parent: 'Dashboard', route: 'dashboard', permission: 'view-dashboard' },
+    { label: 'Perusahaan', parent: 'Perusahaan', route: 'companies.index', permission: 'view-companies' },
     { label: 'Kendaraan', parent: 'Master', route: 'vehicles.index', permission: 'view-vehicles' },
     { label: 'Area Parkir', parent: 'Master', route: 'parking_areas.index', permission: 'view-parking-areas' },
     { label: 'Role', parent: 'Akses', route: 'roles.index', permission: 'view-roles' },

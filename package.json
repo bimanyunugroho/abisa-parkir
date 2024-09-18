@@ -20,8 +20,10 @@
     "dependencies": {
         "@heroicons/vue": "^2.1.5",
         "chart.js": "^4.4.4",
+        "html5-qrcode": "^2.3.8",
         "lodash-es": "^4.17.21",
         "moment-timezone": "^0.5.45",
+        "qrcode.vue": "^3.4.1",
         "vue-chartjs": "^5.3.1",
         "vue-flatpickr-component": "^11.0.5",
         "vue-toastification": "^2.0.0-rc.5"

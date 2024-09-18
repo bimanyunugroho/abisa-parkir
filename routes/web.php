@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AccessUserController;
+use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MonitoringParkingController;
 use App\Http\Controllers\Admin\ParkingAreaController;
@@ -39,8 +40,11 @@ Route::middleware(['auth'])->group(function () {
         'vehicles' => VehicleController::class,
         'transactions'  => TransactionController::class,
         'permissions' => PermissionController::class,
-        'access_users'  => AccessUserController::class
+        'access_users'  => AccessUserController::class,
+        'companies' => CompanyController::class
     ]);
+
+    Route::get('/transactions/{transaction}/print', [TransactionController::class, 'printTicket'])->name('transactions.print');
 
     Route::put('access_users/non_active/{access_user}', [AccessUserController::class, 'non_active'])->name('access_users.non_active');
     Route::put('access_users/active/{access_user}', [AccessUserController::class, 'active'])->name('access_users.active');

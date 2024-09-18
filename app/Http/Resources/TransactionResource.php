@@ -43,6 +43,7 @@ class TransactionResource extends JsonResource
             'payment' => $this->payment,
             'change_pay' => $this->change_pay,
             'status'    => $this->status,
+            'qr_code'   => $this->qr_code,
             'created_at'    => $this->created_at->format('Y-m-d H:i:s')
         ];
     }

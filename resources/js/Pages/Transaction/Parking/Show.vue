@@ -62,8 +62,12 @@ onUnmounted(() => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Card for Vehicle Info -->
                             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex flex-col items-center">
-                                <div class="flex flex-col items-center">
-                                    <VehicleIcon :vehicleType="transaction.parking_rate.vehicle.slug" />
+                                <h2 class="text-lg font-bold mb-4">QR Code</h2>
+                                <div v-if="transaction.qr_code" class="py-4 mb-5 flex flex-col items-center">
+                                    <div class="bg-white p-4 rounded-lg shadow-md">
+                                        <img :src="'data:image/svg+xml;base64,' + transaction.qr_code" alt="QR Code"
+                                            class="h-32 w-32 object-contain" />
+                                    </div>
                                 </div>
 
                                 <h3 class="text-xl font-medium text-slate-400">No. Tiket</h3>
@@ -72,9 +76,13 @@ onUnmounted(() => {
                                 <p class="text-3xl text-slate-200 font-bold">{{ transaction.license_plate }}</p>
                             </div>
 
+
                             <!-- Card for Parking Details -->
                             <div class="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 flex flex-col">
                                 <h2 class="text-lg font-bold mb-4">Detail Parkir</h2>
+                                <div class="flex flex-col items-center">
+                                    <VehicleIcon :vehicleType="transaction.parking_rate.vehicle.slug" />
+                                </div>
                                 <div class="check-details mt-4 flex-grow">
                                     <div class="mb-3 space-y-2">
                                         <div class="flex justify-between">

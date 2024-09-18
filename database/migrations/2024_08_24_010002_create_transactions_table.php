@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('payment',10,2)->nullable();
             $table->decimal('change_pay',10,2)->nullable();
             $table->enum('status', StatusEnum::values())->default(StatusEnum::ACTIVE->value);
+            $table->text('qr_code')->nullable()->after('no_ticket');
             $table->timestamps();
             $table->softDeletes();
         });

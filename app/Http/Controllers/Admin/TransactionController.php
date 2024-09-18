@@ -9,11 +9,15 @@ use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Models\Company;
 use App\Models\ParkingArea;
 use App\Models\ParkingRate;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class TransactionController extends Controller
 {
@@ -98,17 +102,65 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTransactionRequest $request)
     {
-        $validatedData = $request->validated();
-        $parkingArea = ParkingArea::findOrFail($validatedData['parking_area_id']);
-        $validatedData['no_ticket'] = NoTicketHelper::generateNoTicket($parkingArea);
-        $transaksi = Transaction::create($validatedData);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil dilakukan!');
+            $validatedData = $request->validated();
+            $parkingArea = ParkingArea::findOrFail($validatedData['parking_area_id']);
+            $validatedData['no_ticket'] = NoTicketHelper::generateNoTicket($parkingArea);
+
+            $qrCode = QrCode::size(300)->generate($validatedData['no_ticket']);
+            $validatedData['qr_code'] = base64_encode($qrCode);
+            
+            $transaksi = Transaction::create($validatedData);
+
+            DB::commit();
+
+            // Generate PDF
+            $ticketData = [
+                'ticket_number' => $transaksi->no_ticket,
+                'plat_nomor' => $transaksi->plat_nomor,
+                'jenis_kendaraan' => $transaksi->jenis_kendaraan,
+                'tanggal_masuk' => $transaksi->created_at->toDateString(),
+                'jam_masuk' => $transaksi->created_at->format('H:i:s'),
+                'qr_code' => $transaksi->qr_code,
+            ];
+
+            return Inertia::render('Transaction/Parking/Index', [
+                'message' => 'Transaksi berhasil dilakukan!',
+                'transaction' => $transaksi,
+                'pdfUrl' => route('transactions.print', $transaksi->slug)
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function printTicket(Transaction $transaction)
+    {
+        $company = Company::first();
+        $ticketData = [
+            'perusahaan'    => [
+                'nama_perusahaan'   => $company->name,
+                'alamat'    => $company->address,
+                'no_telp'   => $company->phone_number,
+                'email' => $company->email
+            ],
+            'ticket_number' => $transaction->no_ticket,
+            'plat_nomor' => $transaction->license_plate,
+            'jenis_kendaraan' => $transaction->parkingRate->vehicle->name,
+            'tanggal_masuk' => $transaction->created_at->toDateString(),
+            'jam_masuk' => $transaction->created_at->format('H:i:s'),
+            'qr_code' => $transaction->qr_code,
+        ];
+
+        $pdf = PDF::loadView('tickets.ticket', $ticketData);
+
+        return $pdf->stream('parking-ticket.pdf');
     }
 
     /**

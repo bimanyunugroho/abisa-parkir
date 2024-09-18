@@ -13,6 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([RbacSeeder::class]);
+        $this->call([RbacSeeder::class, VehicleSeeder::class]);
     }
 }

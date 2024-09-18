@@ -26,6 +26,9 @@ class RbacSeeder extends Seeder
             // Roles
             'view roles', 'view role', 'create role', 'edit role', 'delete role',
 
+            // Company
+            'view companies', 'view company', 'create company', 'edit company',
+
             // Parking Areas
             'view parking areas', 'view parking area', 'create parking area', 'edit parking area', 'delete parking area',
 

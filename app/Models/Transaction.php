@@ -25,7 +25,8 @@ class Transaction extends Model
         'total_cost',
         'payment',
         'change_pay',
-        'status'
+        'status',
+        'qr_code'
     ];
 
     public function getSlugOptions(): SlugOptions
@@ -69,7 +70,7 @@ class Transaction extends Model
         });
     }
 
-        protected function updateMonitoringParking($increment)
+    protected function updateMonitoringParking($increment)
     {
         $parkingArea = $this->parkingArea;
 
@@ -89,6 +90,4 @@ class Transaction extends Model
         $status->available = $parkingArea->capacity - $status->used;
         $status->save();
     }
-
-
 }
