@@ -1,0 +1,68 @@
+services:
+  - type: web
+    name: siparkir
+    runtime: docker
+    dockerfilePath: ./Dockerfile.prod
+    plan: free
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: SiParkir
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_TIMEZONE
+        value: Asia/Jakarta
+      - key: APP_URL
+        value: https://siparkir.onrender.com
+      - key: APP_LOCALE
+        value: id
+      - key: APP_FALLBACK_LOCALE
+        value: id
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: error
+
+      # DB — isi manual di Render dashboard (sensitive)
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSLMODE
+        value: require
+
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: SESSION_LIFETIME
+        value: 120
+      - key: CACHE_STORE
+        value: array
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: BROADCAST_CONNECTION
+        value: log
+
+      - key: MAIL_MAILER
+        value: log
+      - key: MAIL_FROM_ADDRESS
+        value: hello@siparkir.com
+      - key: MAIL_FROM_NAME
+        value: SiParkir
+
+      - key: BCRYPT_ROUNDS
+        value: 12
